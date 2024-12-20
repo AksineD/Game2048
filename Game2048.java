@@ -15,16 +15,17 @@ public class Game2048 {
             String input = scanner.nextLine().toUpperCase();
             switch (input) {
                 case "W":
-                    model.move(Direction.UP);
+                    model.move(Direction.LEFT);
+
                     break;
                 case "A":
-                    model.move(Direction.LEFT);
+                    model.move(Direction.UP);
                     break;
                 case "S":
-                    model.move(Direction.DOWN);
+                    model.move(Direction.RIGHT);
                     break;
                 case "D":
-                    model.move(Direction.RIGHT);
+                    model.move(Direction.DOWN);
                     break;
                 case "R":
                     model.init();

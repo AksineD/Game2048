@@ -25,7 +25,7 @@ public class BoardMap {
 
     public void set(int x, int y, int number) {
         if (isValidPosition(x, y))
-            _board[_size][_size] = number;
+            _board[x][y] = number;
     }
 
     public void reset() {
@@ -36,10 +36,14 @@ public class BoardMap {
         }
     }
 
+    private boolean isValidPosition(int x, int y) {
+        return x >= 0 && x < _size && y >= 0 && y < _size;
+    }
+/*
     public boolean isValidPosition(int x, int y) {
         return x >= 0 && x < _size && y >= 0 && y < _size;
     }
-
+*/
     public void printBoard() {
         for (int i = 0; i < _size; i++) {
             for (int j = 0; j < _size; j++) {

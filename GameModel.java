@@ -28,23 +28,31 @@ public class GameModel {
         addRandomTile();
     }
 
+    /*
     private void addRandomTile() {
         if (_isGameOver) return;
-/*
-        int x, y;
-        do {
-            x = _random.nextInt( _boardMap.getSize());
-            y = _random.nextInt( _boardMap.getSize());
-        }
-        while (_boardMap.get(x, y) != 0);
-        _boardMap.set(x, y, _random.nextInt(2) == 0 ? 2 : 4);
-        */
+
         int x, y;
         do {
             x = _random.nextInt(_boardMap.getSize());
             y = _random.nextInt(_boardMap.getSize());
         } while (_boardMap.get(x, y) != 0);  // Error likely occurs here
         _boardMap.set(x, y, _random.nextInt(2) == 0 ? 2 : 4);
+    }
+    */
+
+    private void addRandomTile() {
+        if (_isGameOver) return;
+
+        int x, y;
+        do {
+            x = _random.nextInt(_boardMap.getSize());
+            y = _random.nextInt(_boardMap.getSize());
+            System.out.println("Trying to place tile at: (" + x + ", " + y + ")");
+        } while (_boardMap.get(x, y) != 0);
+
+        _boardMap.set(x, y, _random.nextInt(2) == 0 ? 2 : 4);
+        System.out.println("Placed tile at: (" + x + ", " + y + ")");
     }
 
     public int BoardCell(int x, int y) {
