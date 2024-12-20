@@ -10,8 +10,14 @@ public class BoardMap {
     public int getSize() {
                return _size;
     }
-
     public int get(int x, int y) {
+        if (isValidPosition(x, y)) {
+            return _board[x][y];
+        }
+        return -1; // Return -1 if the position is invalid
+    }
+
+    public int ge1t(int x, int y) {
         if (isValidPosition(x, y))
             return _board[_size][_size];
         return -1;
