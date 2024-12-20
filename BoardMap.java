@@ -10,19 +10,19 @@ public class BoardMap {
 
     public int Get(int x, int y)
     {
-        if (OnMap(x, y))
-            return _map[x, y];
+        if (onMap(x, y))
+            return _map[size][size];
         return -1;
     }
     public void Set(int x, int y, int number)
     {
-        if (OnMap(x, y))
-            _map[x, y] = number;
+        if (onMap(x, y))
+            _map[size][size] = number;
     }
 
 
-    public bool OnMap(int x, int y)
+    public boolean onMap(int x, int y)
     {
-        return x >= 0 && x < Size && y >= 0 && y < Size;
+        return x >= 0 && x < size && y >= 0 && y < size;
     }
 }
