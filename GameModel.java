@@ -7,127 +7,134 @@ public class GameModel {
 
     private static final Random _random = new Random();
 
+    int max = 4, min = 1;
+
     public GameModel(int bordSize) {
         _boardMap = new BoardMap(bordSize);
     }
 
-    public void Init() {
+    public void init() {
         _isGameOver = false;
         _score = 0;
-
+        _boardMap.reset();
+        /*
         for (var y = 0; y < _boardMap.size; y++) {
             for (var x = 0; x < _boardMap.size; x++) {
                 _boardMap.set(x, y, 0);
             }
         }
-        AddRandomTile();
+        */
+        addRandomTile();
+        addRandomTile();
     }
 
-    Random random = new Random();
-    int max = 4, min = 1;
-
-    private void AddRandomTile() {
+    private void addRandomTile() {
         if (_isGameOver) return;
 
         int x, y;
         do {
-            x = random.nextInt(0, _boardMap.size);
-            y = random.nextInt(0, _boardMap.size);
+            x = _random.nextInt( _boardMap.getSize());
+            y = _random.nextInt( _boardMap.getSize());
         }
         while (_boardMap.get(x, y) != 0);
-        int number = random.nextInt(max - min + 1) + min;
-        _boardMap.set(x, y, number * 2); // Adds a tile with value 2 or 4
+        _boardMap.set(x, y, _random.nextInt(2) == 0 ? 2 : 4);
     }
 
     public int BoardCell(int x, int y) {
         return _boardMap.get(x, y);
     }
 
-    public void Move(Direction direction) {
+    public void move(Direction direction) {
+        boolean moved = false;
+        int size = _boardMap.getSize();
+
         switch (direction) {
-            case Direction.LEFT: {
-                for (var y = 0; y < _boardMap.size; y++)
-                    for (var x = 1; x < _boardMap.size; x++) {
-                        Move(x, y, -1, 0);
+            case LEFT:
+                for (int y = 0; y < size; y++) {
+                    for (int x = 1; x < size; x++) {
+                        moved |= moveTile(x, y, -1, 0);
                     }
-                for (var y = 0; y < _boardMap.size; y++)
-                    for (var x = 1; x < _boardMap.size; x++) {
-                        Join(x, y, -1, 0);
-                    }
-                break;
-            }
-            case Direction.RIGHT: {
-                for (var y = 0; y < _boardMap.size; y++)
-                    for (var x = _boardMap.size - 2; x >= 0; x--) {
-                        Move(x, y, 1, 0);
-                    }
-                for (var y = 0; y < _boardMap.size; y++)
-                    for (var x = _boardMap.size - 2; x >= 0; x--) {
-                        Join(x, y, 1, 0);
-                    }
-                break;
-            }
-            case Direction.UP: {
-
-                for (var x = 0; x < _boardMap.size; x++)
-                    for (var y = 1; y < _boardMap.size; y++) {
-                        Move(x, y, 0, -1);
-                    }
-                for (var x = 0; x < _boardMap.size; x++)
-                    for (var y = 1; y < _boardMap.size; y++) {
-                        Join(x, y, 0, -1);
-                    }
-                break;
-            }
-            case Direction.DOWN: {
-                for (var x = 0; x < _boardMap.size; x++)
-                    for (var y = _boardMap.size - 2; y >= 0; y--) {
-                        Move(x, y, 0, 1);
-                    }
-                for (var x = 0; x < _boardMap.size; x++)
-                    for (var y = _boardMap.size - 2; y >= 0; y--) {
-                        Join(x, y, 0, 1);
-                    }
-                break;
-            }
-        }
-
-        AddRandomTile();
-        AddRandomTile();
-    }
-
-    public void Move(int x, int y, int xn, int yn) {
-        if (_boardMap.get(x, y) > 0) {
-            while (_boardMap.get(x + xn, y + yn) == 0) {
-                _boardMap.set(x + xn, y + yn, _boardMap.get(x, y));
-                _boardMap.set(x, y, 0);
-                x += xn;
-                y += yn;
-            }
-        }
-    }
-
-    public void Join(int x, int y, int xn, int yn) {
-        if (_boardMap.get(x, y) > 0) {
-            if (_boardMap.get(x, y) == _boardMap.get(x + xn, y + yn)) {
-                _boardMap.set(x + xn, y + yn, _boardMap.get(x, y) * 2);
-                _score += 1;
-                while (_boardMap.get(x - xn, y - yn) > 0) {
-                    _boardMap.set(x, y, _boardMap.get(x - xn, y - yn));
-                    x -= xn;
-                    y -= yn;
                 }
+                break;
+            case RIGHT:
+                for (int y = 0; y < size; y++) {
+                    for (int x = size - 2; x >= 0; x--) {
+                        moved |= moveTile(x, y, 1, 0);
+                    }
+                }
+                break;
+            case UP:
+                for (int x = 0; x < size; x++) {
+                    for (int y = 1; y < size; y++) {
+                        moved |= moveTile(x, y, 0, -1);
+                    }
+                }
+                break;
+            case DOWN:
+                for (int x = 0; x < size; x++) {
+                    for (int y = size - 2; y >= 0; y--) {
+                        moved |= moveTile(x, y, 0, 1);
+                    }
+                }
+                break;
+        }
 
-                _boardMap.set(x, y, 0);
+        if (moved) {
+            addRandomTile();
+        }
+
+    }
+    private boolean moveTile(int x, int y, int dx, int dy) {
+        int currentValue = _boardMap.get(x, y);
+        if (currentValue == 0) {
+            return false;
+        }
+
+        int newX = x;
+        int newY = y;
+
+        while (true) {
+            int nextX = newX + dx;
+            int nextY = newY + dy;
+
+            if (!isValidPosition(nextX, nextY)) {
+                break;
+            }
+
+            int nextValue = _boardMap.get(nextX, nextY);
+
+            if (nextValue == 0) {
+                _boardMap.set(nextX, nextY, currentValue);
+                _boardMap.set(newX, newY, 0);
+                newX = nextX;
+                newY = nextY;
+            } else if (nextValue == currentValue) {
+                _boardMap.set(nextX, nextY, currentValue * 2);
+                _boardMap.set(newX, newY, 0);
+                _score += currentValue * 2;
+                return true;
+            } else {
+                break;
             }
         }
+
+        return newX != x || newY != y;
     }
 
-    public int Size() {
-        return _boardMap.size;
+    // Check if a position is within the board bounds
+    private boolean isValidPosition(int x, int y) {
+        return x >= 0 && x < _boardMap.getSize() && y >= 0 && y < _boardMap.getSize();
     }
 
-    public int Score() {
+    public int getBoardCell(int x, int y) {
+        return _boardMap.get(x, y);
+    }
+
+    public int getSize() {
+        return _boardMap.getSize();
+    }
+
+    public int getScore() {
         return _score;
     }
 }
