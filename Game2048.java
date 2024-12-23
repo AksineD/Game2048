@@ -6,7 +6,6 @@ public class Game2048 {
         GameModel model = new GameModel(4); // Create a 4x4 game board
         model.init();                       // Initialize the board
         show(model);                        // Display the initial board
-
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
