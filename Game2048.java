@@ -37,11 +37,17 @@ public class Game2048 {
                 default:
                     System.out.println("Invalid input. Please use W/A/S/D, R, or Q.");
             }
-
-            show(model); // Display the board after the move
+            clearConsole(); // Clear console
+            show(model);
+            //show(model); // Display the board after the move
         }
     }
 
+    private static void clearConsole() {
+        for (int i = 0; i < 50; i++) {
+            System.out.println();
+        }
+    }
     // Method to display the game board
     private static void show(GameModel model) {
         for (int x = 0; x < model.getSize(); x++) {
